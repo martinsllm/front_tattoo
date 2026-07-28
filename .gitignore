@@ -23,6 +23,7 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+.cursor/
 
 *.tsbuildinfo
 
@@ -37,3 +38,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# Local planning docs
+docs/sprint-dashboard.md
