@@ -141,6 +141,20 @@ button:disabled {
   font-weight: 700;
 }
 
+.dashboard-content {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+}
+
+.dashboard-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding-left: 1.2rem;
+  color: #475569;
+}
+
 @media (max-width: 640px) {
   .dashboard-header {
     align-items: stretch;

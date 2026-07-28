@@ -54,15 +54,15 @@ async function logout(): Promise<void> {
       <article class="dashboard-card">
         <span class="card-label">Próximas ações</span>
         <strong>Organizar dados do dashboard</strong>
-          <ul class="dashboard-list">
-            <li>Definir quais números virão da API.</li>
-            <li>Separar mocks para troca futura.</li>
-            <li>Preparar componentes reutilizáveis.</li>
-          </ul>
+        <ul class="dashboard-list">
+          <li>Definir quais números virão da API.</li>
+          <li>Separar mocks para troca futura.</li>
+          <li>Preparar componentes reutilizáveis.</li>
+        </ul>
       </article>
 
       <article class="dashboard-card">
-      <span class="card-label">Atividade recente</span>
+        <span class="card-label">Atividade recente</span>
         <strong>Base autenticada pronta</strong>
         <ul class="dashboard-list">
           <li>Login integrado com a API.</li>
