@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import DashboardStatCard from '@/components/dashboard/DashboardStatCard.vue'
+import DashboardSection from '@/components/dashboard/DashboardSection.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -24,7 +25,7 @@ const dashboardStats = [
     value: '36',
     description: 'Artistas salvos pelos usuários.',
   },
-  
+
   {
     label: 'Próximo passo',
     value: 'Integrar dados reais',
@@ -61,25 +62,21 @@ async function logout(): Promise<void> {
     </section>
 
     <section class="dashboard-content">
-      <article class="dashboard-card">
-        <span class="card-label">Próximas ações</span>
-        <strong>Organizar dados do dashboard</strong>
+      <DashboardSection title="Próximas ações" description="Organizar dados do dashboard">
         <ul class="dashboard-list">
           <li>Definir quais números virão da API.</li>
           <li>Separar mocks para troca futura.</li>
           <li>Preparar componentes reutilizáveis.</li>
         </ul>
-      </article>
+      </DashboardSection>
 
-      <article class="dashboard-card">
-        <span class="card-label">Atividade recente</span>
-        <strong>Base autenticada pronta</strong>
+      <DashboardSection title="Atividade recente" description="Base autenticada pronta">
         <ul class="dashboard-list">
           <li>Login integrado com a API.</li>
           <li>Token persistido no navegador.</li>
           <li>Dashboard protegido por rota.</li>
         </ul>
-      </article>
+      </DashboardSection>
     </section>
   </main>
 </template>
