@@ -1,10 +1,36 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-
 import { useAuthStore } from '@/stores/auth'
+import DashboardStatCard from '@/components/dashboard/DashboardStatCard.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
+
+const dashboardStats = [
+  {
+    label: 'Artistas cadastrados',
+    value: '24',
+    description: 'Perfis disponíveis para consulta.',
+  },
+
+  {
+    label: 'Avaliações recebidas',
+    value: '128',
+    description: 'Avaliações registradas na plataforma.',
+  },
+
+  {
+    label: 'Favoritos',
+    value: '36',
+    description: 'Artistas salvos pelos usuários.',
+  },
+  
+  {
+    label: 'Próximo passo',
+    value: 'Integrar dados reais',
+    description: 'Substituir os números mockados por respostas da API.',
+  },
+]
 
 async function logout(): Promise<void> {
   await auth.logout()
@@ -25,29 +51,13 @@ async function logout(): Promise<void> {
     </section>
 
     <section class="dashboard-grid">
-      <article class="dashboard-card">
-        <span class="card-label">Artistas cadastrados</span>
-        <strong>24</strong>
-        <span>Perfis disponíveis para consulta.</span>
-      </article>
-
-      <article class="dashboard-card">
-        <span class="card-label">Avaliações recebidas</span>
-        <strong>128</strong>
-        <span>Avaliações registradas na plataforma.</span>
-      </article>
-
-      <article class="dashboard-card">
-        <span class="card-label">Favoritos</span>
-        <strong>36</strong>
-        <span>Artistas salvos pelos usuários.</span>
-      </article>
-
-      <article class="dashboard-card">
-        <span class="card-label">Próximo passo</span>
-        <strong>Integrar dados reais</strong>
-        <span>Substituir os números mockados por respostas da API.</span>
-      </article>
+      <DashboardStatCard
+        v-for="stat in dashboardStats"
+        :key="stat.label"
+        :label="stat.label"
+        :value="stat.value"
+        :description="stat.description"
+      />
     </section>
 
     <section class="dashboard-content">
