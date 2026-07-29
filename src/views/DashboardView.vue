@@ -3,35 +3,10 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import DashboardStatCard from '@/components/dashboard/DashboardStatCard.vue'
 import DashboardSection from '@/components/dashboard/DashboardSection.vue'
+import { dashboardStats, dashboardNextSteps, dashboardRecentActivity } from '@/data/dashboard'
 
 const router = useRouter()
 const auth = useAuthStore()
-
-const dashboardStats = [
-  {
-    label: 'Artistas cadastrados',
-    value: '24',
-    description: 'Perfis disponíveis para consulta.',
-  },
-
-  {
-    label: 'Avaliações recebidas',
-    value: '128',
-    description: 'Avaliações registradas na plataforma.',
-  },
-
-  {
-    label: 'Favoritos',
-    value: '36',
-    description: 'Artistas salvos pelos usuários.',
-  },
-
-  {
-    label: 'Próximo passo',
-    value: 'Integrar dados reais',
-    description: 'Substituir os números mockados por respostas da API.',
-  },
-]
 
 async function logout(): Promise<void> {
   await auth.logout()
@@ -64,17 +39,13 @@ async function logout(): Promise<void> {
     <section class="dashboard-content">
       <DashboardSection title="Próximas ações" description="Organizar dados do dashboard">
         <ul class="dashboard-list">
-          <li>Definir quais números virão da API.</li>
-          <li>Separar mocks para troca futura.</li>
-          <li>Preparar componentes reutilizáveis.</li>
+          <li v-for="step in dashboardNextSteps" :key="step">{{ step }}</li>
         </ul>
       </DashboardSection>
 
       <DashboardSection title="Atividade recente" description="Base autenticada pronta">
         <ul class="dashboard-list">
-          <li>Login integrado com a API.</li>
-          <li>Token persistido no navegador.</li>
-          <li>Dashboard protegido por rota.</li>
+          <li v-for="activity in dashboardRecentActivity" :key="activity">{{ activity }}</li>
         </ul>
       </DashboardSection>
     </section>
