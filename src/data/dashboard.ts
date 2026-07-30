@@ -1,4 +1,6 @@
-export const dashboardStats = [
+import type { DashboardStat } from '@/api/dashboard'
+
+export const dashboardStats: DashboardStat[] = [
   {
     label: 'Artistas cadastrados',
     value: '24',
@@ -24,13 +26,13 @@ export const dashboardStats = [
   },
 ]
 
-export const dashboardNextSteps = [
+export const dashboardNextSteps: string[] = [
   'Definir quais números virão da API.',
   'Separar dados estáticos para troca futura.',
   'Preparar componentes reutilizáveis.',
 ]
 
-export const dashboardRecentActivity = [
+export const dashboardRecentActivity: string[] = [
   'Login integrado com a API.',
   'Token persistido no navegador.',
   'Dashboard protegido por rota.',

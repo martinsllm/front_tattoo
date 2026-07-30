@@ -1,7 +1,7 @@
 <script setup lang="ts">
 type Props = {
   label: string
-  value: string
+  value: string | number
   description: string
 }
 
