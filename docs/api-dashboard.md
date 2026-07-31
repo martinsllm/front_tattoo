@@ -5,7 +5,7 @@ GET /me
 - Autorização: admin
 - Usado para: nome/e-mail do usuário no header do dashboard
 
-GET /dashboard/summary
+GET /metrics
 - Autenticação: sim
 - Autorização: admin
 - Usado para:
