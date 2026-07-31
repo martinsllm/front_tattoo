@@ -1,12 +1,58 @@
 <script setup lang="ts">
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import DashboardStatCard from '@/components/dashboard/DashboardStatCard.vue'
 import DashboardSection from '@/components/dashboard/DashboardSection.vue'
 import { dashboardStats, dashboardNextSteps, dashboardRecentActivity } from '@/data/dashboard'
+import { fetchDashboardSummary, type DashboardSummaryResponse } from '@/api/dashboard'
+
 
 const router = useRouter()
 const auth = useAuthStore()
+
+const isDashboardLoading = ref(true)
+const dashboardError = ref('')
+const summary = ref<DashboardSummaryResponse | null>(null)
+
+onMounted(async () => {
+  try {
+    summary.value = await fetchDashboardSummary()
+  } catch {
+    dashboardError.value = 'Não foi possível carregar os dados do dashboard'
+  } finally {
+    isDashboardLoading.value = false
+  }
+})
+
+const resolvedDashboardStats = computed(() => {
+  if (!summary.value) return dashboardStats
+
+  return dashboardStats.map((stat) => {
+    if(stat.label === 'Artistas cadastrados') {
+      return {
+        ...stat,
+        value: summary.value.total_artists,
+      }
+    }
+
+    if(stat.label === 'Avaliações recebidas') {
+      return {
+        ...stat,
+        value: summary.value.total_reviews,
+      }
+    }
+
+    if(stat.label === 'Favoritos') {
+      return {
+        ...stat,
+        value: summary.value.total_favorites,
+      }
+    }
+
+    return stat
+  })
+})
 
 async function logout(): Promise<void> {
   await auth.logout()
@@ -28,7 +74,7 @@ async function logout(): Promise<void> {
 
     <section class="dashboard-grid">
       <DashboardStatCard
-        v-for="stat in dashboardStats"
+        v-for="stat in resolvedDashboardStats"
         :key="stat.label"
         :label="stat.label"
         :value="stat.value"

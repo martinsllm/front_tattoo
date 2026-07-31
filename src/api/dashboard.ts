@@ -13,12 +13,12 @@ export type DashboardSummary = {
 }
 
 export type DashboardSummaryResponse = {
-  artists_total: number
-  reviews_total: number
-  favorites_total: number
+  total_artists: number
+  total_reviews: number
+  total_favorites: number
 }
 
 export async function fetchDashboardSummary(): Promise<DashboardSummaryResponse> {
-  const response = await http.get<{ data: DashboardSummaryResponse }>('/metrics')
+  const response = await http.get<{ data: DashboardSummaryResponse }>('/admin/metrics')
   return response.data.data
 }

@@ -13,6 +13,6 @@ GET /metrics
   - total de avaliações recebidas
   - total geral de favoritos
 - Dado esperado:
-  - artists_total: number
-  - reviews_total: number
-  - favorites_total: number
+  - total_artists: number
+  - total_reviews: number
+  - total_favorites: number
