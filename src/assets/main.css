@@ -26,7 +26,8 @@
   min-height: 100vh;
   padding: 2rem;
   background:
-    radial-gradient(circle at top left, var(--color-brand-glow), transparent 32rem), var(--color-page);
+    radial-gradient(circle at top left, var(--color-brand-glow), transparent 32rem),
+    var(--color-page);
 }
 
 .auth-page {
