@@ -6,6 +6,7 @@ import DashboardStatCard from '@/components/dashboard/DashboardStatCard.vue'
 import DashboardSection from '@/components/dashboard/DashboardSection.vue'
 import { dashboardStats, dashboardNextSteps, dashboardRecentActivity } from '@/data/dashboard'
 import { fetchDashboardSummary, type DashboardSummaryResponse } from '@/api/dashboard'
+import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
@@ -62,16 +63,14 @@ async function logout(): Promise<void> {
 </script>
 
 <template>
-  <main class="dashboard-page">
-    <section class="dashboard-header">
-      <div>
-        <span class="eyebrow">Painel</span>
-        <h1>Olá, {{ auth.user?.name }}!</h1>
-        <p>Acompanhe seus dados principais, próximas ações e movimentações recentes.</p>
-      </div>
-
+  <AuthenticatedLayout
+    eyebrow="Painel"
+    :title="`Olá, ${auth.user?.name ?? 'Usuário'}!`"
+    description="Acompanhe seus dados principais, próximas ações e movimentações recentes."
+  >
+    <template #actions>
       <button type="button" class="secondary-button" @click="logout">Sair</button>
-    </section>
+    </template>
 
     <p v-if="isDashboardLoading" class="dashboard-status">Carregando dados do dashboard...</p>
 
@@ -104,5 +103,5 @@ async function logout(): Promise<void> {
         <p v-else>Nenhuma atividade recente registrada.</p>
       </DashboardSection>
     </section>
-  </main>
+  </AuthenticatedLayout>
 </template>
