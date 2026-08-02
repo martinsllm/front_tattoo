@@ -93,14 +93,14 @@ async function logout(): Promise<void> {
         <ul v-if="dashboardNextSteps.length" class="dashboard-list">
           <li v-for="step in dashboardNextSteps" :key="step">{{ step }}</li>
         </ul>
-        <p v-else>Nenhuma próxima ação cadastrada.</p>
+        <p v-else class="empty-message">Nenhuma próxima ação cadastrada.</p>
       </DashboardSection>
 
       <DashboardSection title="Atividade recente" description="Base autenticada pronta">
         <ul v-if="dashboardRecentActivity.length" class="dashboard-list">
           <li v-for="activity in dashboardRecentActivity" :key="activity">{{ activity }}</li>
         </ul>
-        <p v-else>Nenhuma atividade recente registrada.</p>
+        <p v-else class="empty-message">Nenhuma atividade recente registrada.</p>
       </DashboardSection>
     </section>
   </AuthenticatedLayout>
