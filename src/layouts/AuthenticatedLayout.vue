@@ -17,6 +17,11 @@ defineProps<Props>()
         <p v-if="description">{{ description }}</p>
       </div>
 
+      <nav class="authenticated-nav" aria-label="Navegação principal">
+        <RouterLink :to="{ name: 'dashboard' }">Dashboard</RouterLink>
+        <RouterLink :to="{ name: 'artists' }">Artistas</RouterLink>
+      </nav>
+
       <slot name="actions" />
     </section>
 
