@@ -1,33 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
 import { useAuthStore } from '@/stores/auth'
-import { DashboardView, LoginView, ArtistsView } from '@/views'
+import { routes } from './routes'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'dashboard',
-      component: DashboardView,
-      meta: {
-        requiresAuth: true,
-      },
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: LoginView,
-    },
-    {
-      path: '/artists',
-      name: 'artists',
-      component: ArtistsView,
-      meta: {
-        requiresAuth: true,
-      },
-    },
-  ],
+  routes,
 })
 
 router.beforeEach(async (to) => {
