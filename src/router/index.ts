@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { useAuthStore } from '@/stores/auth'
-import DashboardView from '../views/DashboardView.vue'
+import { DashboardView, LoginView, ArtistsView } from '@/views'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,7 +17,15 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/LoginView.vue'),
+      component: LoginView,
+    },
+    {
+      path: '/artists',
+      name: 'artists',
+      component: ArtistsView,
+      meta: {
+        requiresAuth: true,
+      },
     },
   ],
 })
