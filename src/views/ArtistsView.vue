@@ -8,13 +8,19 @@ const artists = ref<Artist[]>([])
 const isLoading = ref(true)
 const errorMessage = ref('')
 const searchQuery = ref('')
+const city = ref('')
+const state = ref('')
 
 async function loadArtists() {
   isLoading.value = true
   errorMessage.value = ''
 
   try {
-    const response = await fetchArtists({ q: searchQuery.value || undefined })
+    const response = await fetchArtists({
+      q: searchQuery.value || undefined,
+      city: city.value || undefined,
+      state: state.value || undefined,
+    })
     artists.value = response.data
   } catch {
     errorMessage.value = 'Não foi possível carregar o catálogo de artistas.'
@@ -23,9 +29,7 @@ async function loadArtists() {
   }
 }
 
-onMounted(async () => {
-  loadArtists()
-})
+onMounted(() => { loadArtists() })
 </script>
 
 <template>
@@ -34,6 +38,24 @@ onMounted(async () => {
     title="Artistas"
     description="Consulte os artistas cadastrados e prepare filtros por estilo, cidade e localização."
   >
+    <form class="catalog-filters" @submit.prevent="loadArtists">
+      <label class="catalog-filters__field catalog-filters__field--grow">
+        Busca
+        <input v-model="searchQuery" type="search" placeholder="Nome, estúdio..." />
+      </label>
+
+      <label class="catalog-filters__field catalog-filters__field--grow">
+        Cidade
+        <input v-model="city" type="text" placeholder="São Paulo" />
+      </label>
+
+      <label class="catalog-filters__field catalog-filters__field--state">
+        Estado
+        <input v-model="state" type="text" maxlength="2" placeholder="SP" />
+      </label>
+
+      <button class="catalog-filters__submit" type="submit">Filtrar</button>
+    </form>
     <p v-if="isLoading" class="dashboard-status">Carregando artistas...</p>
 
     <p v-else-if="errorMessage" class="error-message">
