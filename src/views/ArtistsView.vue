@@ -7,16 +7,24 @@ import { fetchArtists, type Artist } from '@/api/artists'
 const artists = ref<Artist[]>([])
 const isLoading = ref(true)
 const errorMessage = ref('')
+const searchQuery = ref('')
 
-onMounted(async () => {
+async function loadArtists() {
+  isLoading.value = true
+  errorMessage.value = ''
+
   try {
-    const response = await fetchArtists()
+    const response = await fetchArtists({ q: searchQuery.value || undefined })
     artists.value = response.data
   } catch {
     errorMessage.value = 'Não foi possível carregar o catálogo de artistas.'
   } finally {
     isLoading.value = false
   }
+}
+
+onMounted(async () => {
+  loadArtists()
 })
 </script>
 
