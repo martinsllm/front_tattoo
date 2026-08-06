@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import ArtistCard from '@/components/artists/ArtistCard.vue'
 import { fetchArtists, type Artist } from '@/api/artists'
 import { fetchStyles, type Style } from '@/api/styles'
+import { fetchTags, type Tag } from '@/api/tags'
 
 const artists = ref<Artist[]>([])
 const isLoading = ref(true)
@@ -15,6 +16,10 @@ const state = ref('')
 const styles = ref<number[]>([])
 const availableStyles = ref<Style[]>([])
 const isStylesOpen = ref(false)
+
+const tags = ref<number[]>([])
+const availableTags = ref<Tag[]>([])
+const isTagsOpen = ref(false)
 
 function toggleStylesPanel() {
   isStylesOpen.value = !isStylesOpen.value
@@ -28,6 +33,17 @@ function toggleStyle(styleId: number) {
   }
 }
 
+function toggleTagsPanel() {
+  isTagsOpen.value = !isTagsOpen.value
+}
+
+function toggleTag(tagId: number) {
+  if (tags.value.includes(tagId)) {
+    tags.value = tags.value.filter((id) => id !== tagId)
+  } else {
+    tags.value.push(tagId)
+  }
+}
 async function loadArtists() {
   isLoading.value = true
   errorMessage.value = ''
@@ -38,6 +54,7 @@ async function loadArtists() {
       city: city.value || undefined,
       state: state.value || undefined,
       styles: styles.value.length ? styles.value : undefined,
+      tags: tags.value.length ? tags.value : undefined,
     })
     artists.value = response.data
   } catch {
@@ -49,6 +66,7 @@ async function loadArtists() {
 
 onMounted(async () => {
   availableStyles.value = await fetchStyles()
+  availableTags.value = await fetchTags()
   loadArtists()
 })
 </script>
@@ -109,8 +127,30 @@ onMounted(async () => {
 
       <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
         Tags
-        <div class="catalog-filters__dropdown-trigger">
-          Selecionar tags
+        <div class="catalog-filters__dropdown-trigger" @click="toggleTagsPanel">
+          {{
+            tags.length
+              ? availableTags
+                  .filter((tag) => tags.includes(tag.id))
+                  .map((tag) => tag.name)
+                  .join(', ')
+              : 'Selecionar tags'
+          }}
+        </div>
+
+        <div v-if="isTagsOpen" class="catalog-filters__dropdown-panel">
+          <label
+            v-for="tag in availableTags"
+            :key="tag.id"
+            class="catalog-filters__dropdown-option"
+          >
+            <input
+              type="checkbox"
+              :checked="tags.includes(tag.id)"
+              @change="toggleTag(tag.id)"
+            />
+            {{ tag.name }}
+          </label>
         </div>
       </div>
 
