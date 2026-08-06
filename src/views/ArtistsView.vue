@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue'
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import ArtistCard from '@/components/artists/ArtistCard.vue'
 import { fetchArtists, type Artist } from '@/api/artists'
+import { fetchStyles, type Style } from '@/api/styles'
 
 const artists = ref<Artist[]>([])
 const isLoading = ref(true)
@@ -10,6 +11,22 @@ const errorMessage = ref('')
 const searchQuery = ref('')
 const city = ref('')
 const state = ref('')
+
+const styles = ref<number[]>([])
+const availableStyles = ref<Style[]>([])
+const isStylesOpen = ref(false)
+
+function toggleStylesPanel() {
+  isStylesOpen.value = !isStylesOpen.value
+}
+
+function toggleStyle(styleId: number) {
+  if (styles.value.includes(styleId)) {
+    styles.value = styles.value.filter((id) => id !== styleId)
+  } else {
+    styles.value.push(styleId)
+  }
+}
 
 async function loadArtists() {
   isLoading.value = true
@@ -20,6 +37,7 @@ async function loadArtists() {
       q: searchQuery.value || undefined,
       city: city.value || undefined,
       state: state.value || undefined,
+      styles: styles.value.length ? styles.value : undefined,
     })
     artists.value = response.data
   } catch {
@@ -29,7 +47,10 @@ async function loadArtists() {
   }
 }
 
-onMounted(() => { loadArtists() })
+onMounted(async () => {
+  availableStyles.value = await fetchStyles()
+  loadArtists()
+})
 </script>
 
 <template>
@@ -53,6 +74,29 @@ onMounted(() => { loadArtists() })
         Estado
         <input v-model="state" type="text" maxlength="2" placeholder="SP" />
       </label>
+
+      <div class="catalog-filters__field catalog-filters__dropdown">
+        Estilos
+
+        <button type="button" class="catalog-filters__dropdown-trigger" @click="toggleStylesPanel">
+          {{ styles.length ? `${styles.length} selecionado(s)` : 'Selecionar estilos' }}
+        </button>
+
+        <div v-if="isStylesOpen" class="catalog-filters__dropdown-panel">
+          <label
+            v-for="style in availableStyles"
+            :key="style.id"
+            class="catalog-filters__dropdown-option"
+          >
+            <input
+              type="checkbox"
+              :checked="styles.includes(style.id)"
+              @change="toggleStyle(style.id)"
+            />
+            {{ style.name }}
+          </label>
+        </div>
+      </div>
 
       <button class="catalog-filters__submit" type="submit">Filtrar</button>
     </form>
