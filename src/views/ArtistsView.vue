@@ -78,9 +78,16 @@ onMounted(async () => {
       <div class="catalog-filters__field catalog-filters__dropdown">
         Estilos
 
-        <button type="button" class="catalog-filters__dropdown-trigger" @click="toggleStylesPanel">
-          {{ styles.length ? `${styles.length} selecionado(s)` : 'Selecionar estilos' }}
-        </button>
+        <div class="catalog-filters__dropdown-trigger" @click="toggleStylesPanel">
+          {{
+            styles.length
+              ? availableStyles
+                  .filter((style) => styles.includes(style.id))
+                  .map((style) => style.name)
+                  .join(', ')
+              : 'Selecionar estilos'
+          }}
+        </div>
 
         <div v-if="isStylesOpen" class="catalog-filters__dropdown-panel">
           <label
