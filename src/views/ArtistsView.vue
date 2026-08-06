@@ -75,7 +75,9 @@ onMounted(async () => {
         <input v-model="state" type="text" maxlength="2" placeholder="SP" />
       </label>
 
-      <div class="catalog-filters__field catalog-filters__dropdown">
+      <div class="catalog-filters__break" aria-hidden="true"></div>
+
+      <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
         Estilos
 
         <div class="catalog-filters__dropdown-trigger" @click="toggleStylesPanel">
@@ -102,6 +104,13 @@ onMounted(async () => {
             />
             {{ style.name }}
           </label>
+        </div>
+      </div>
+
+      <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
+        Tags
+        <div class="catalog-filters__dropdown-trigger">
+          Selecionar tags
         </div>
       </div>
 
