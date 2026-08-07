@@ -15,15 +15,16 @@ const state = ref('')
 
 const styles = ref<number[]>([])
 const availableStyles = ref<Style[]>([])
-const isStylesOpen = ref(false)
+
+type FilterPanel = 'styles' | 'tags'
+const openFilterPanel = ref<FilterPanel | null>(null)
+
+function toggleFiltersPanel(panel: 'styles' | 'tags') {
+  openFilterPanel.value = openFilterPanel.value === panel ? null : panel
+}
 
 const tags = ref<number[]>([])
 const availableTags = ref<Tag[]>([])
-const isTagsOpen = ref(false)
-
-function toggleStylesPanel() {
-  isStylesOpen.value = !isStylesOpen.value
-}
 
 function toggleStyle(styleId: number) {
   if (styles.value.includes(styleId)) {
@@ -31,10 +32,6 @@ function toggleStyle(styleId: number) {
   } else {
     styles.value.push(styleId)
   }
-}
-
-function toggleTagsPanel() {
-  isTagsOpen.value = !isTagsOpen.value
 }
 
 function toggleTag(tagId: number) {
@@ -98,7 +95,7 @@ onMounted(async () => {
       <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
         Estilos
 
-        <div class="catalog-filters__dropdown-trigger" @click="toggleStylesPanel">
+        <div class="catalog-filters__dropdown-trigger" @click="toggleFiltersPanel('styles')">
           {{
             styles.length
               ? availableStyles
@@ -109,7 +106,7 @@ onMounted(async () => {
           }}
         </div>
 
-        <div v-if="isStylesOpen" class="catalog-filters__dropdown-panel">
+        <div v-if="openFilterPanel === 'styles'" class="catalog-filters__dropdown-panel">
           <label
             v-for="style in availableStyles"
             :key="style.id"
@@ -127,7 +124,7 @@ onMounted(async () => {
 
       <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
         Tags
-        <div class="catalog-filters__dropdown-trigger" @click="toggleTagsPanel">
+        <div class="catalog-filters__dropdown-trigger" @click="toggleFiltersPanel('tags')">
           {{
             tags.length
               ? availableTags
@@ -138,7 +135,7 @@ onMounted(async () => {
           }}
         </div>
 
-        <div v-if="isTagsOpen" class="catalog-filters__dropdown-panel">
+        <div v-if="openFilterPanel === 'tags'" class="catalog-filters__dropdown-panel">
           <label
             v-for="tag in availableTags"
             :key="tag.id"
