@@ -13,9 +13,6 @@ const searchQuery = ref('')
 const city = ref('')
 const state = ref('')
 
-const styles = ref<number[]>([])
-const availableStyles = ref<Style[]>([])
-
 type FilterPanel = 'styles' | 'tags'
 const openFilterPanel = ref<FilterPanel | null>(null)
 
@@ -23,24 +20,21 @@ function toggleFiltersPanel(panel: 'styles' | 'tags') {
   openFilterPanel.value = openFilterPanel.value === panel ? null : panel
 }
 
+const styles = ref<number[]>([])
+const availableStyles = ref<Style[]>([])
+
 const tags = ref<number[]>([])
 const availableTags = ref<Tag[]>([])
 
-function toggleStyle(styleId: number) {
-  if (styles.value.includes(styleId)) {
-    styles.value = styles.value.filter((id) => id !== styleId)
+function toggleSelection(list: number[], id: number) {
+  const index = list.indexOf(id)
+  if (index >= 0) {
+    list.splice(index, 1)
   } else {
-    styles.value.push(styleId)
+    list.push(id)
   }
 }
 
-function toggleTag(tagId: number) {
-  if (tags.value.includes(tagId)) {
-    tags.value = tags.value.filter((id) => id !== tagId)
-  } else {
-    tags.value.push(tagId)
-  }
-}
 async function loadArtists() {
   isLoading.value = true
   errorMessage.value = ''
@@ -115,7 +109,7 @@ onMounted(async () => {
             <input
               type="checkbox"
               :checked="styles.includes(style.id)"
-              @change="toggleStyle(style.id)"
+              @change="toggleSelection(styles, style.id)"
             />
             {{ style.name }}
           </label>
@@ -144,7 +138,7 @@ onMounted(async () => {
             <input
               type="checkbox"
               :checked="tags.includes(tag.id)"
-              @change="toggleTag(tag.id)"
+              @change="toggleSelection(tags, tag.id)"
             />
             {{ tag.name }}
           </label>
