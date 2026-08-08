@@ -29,8 +29,14 @@ function searchArtists() {
 }
 
 onMounted(async () => {
-  availableStyles.value = await fetchStyles()
-  availableTags.value = await fetchTags()
+  const [stylesList, tagsList] = await Promise.all([
+    fetchStyles(),
+    fetchTags(),
+  ])
+
+  availableStyles.value = stylesList
+  availableTags.value = tagsList
+
   await searchArtists()
 })
 </script>
