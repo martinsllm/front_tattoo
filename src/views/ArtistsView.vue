@@ -6,11 +6,14 @@ import { fetchStyles, type Style } from '@/api/styles'
 import { fetchTags, type Tag } from '@/api/tags'
 import MultiSelectFilter from '@/components/filters/MultiSelectFilter.vue'
 import { useArtists } from '@/composables/useArtists'
+import { useGeolocation } from '@/composables/useGeolocation'
 
 const { artists, isLoading, errorMessage, loadArtists } = useArtists()
+const { coords, isLocating, locationError, requestLocation } = useGeolocation()
 const searchQuery = ref('')
 const city = ref('')
 const state = ref('')
+const radius = ref(10)
 
 const styles = ref<number[]>([])
 const availableStyles = ref<Style[]>([])
@@ -25,14 +28,23 @@ function searchArtists() {
     state: state.value || undefined,
     styles: styles.value.length ? styles.value : undefined,
     tags: tags.value.length ? tags.value : undefined,
+    lat: coords.value?.lat,
+    lng: coords.value?.lng,
+    radius: coords.value ? radius.value : undefined,
+    sort: coords.value ? 'distance' : undefined,
   })
 }
 
+async function locateAndSearch() {
+  await requestLocation()
+
+  if (coords.value) {
+    await searchArtists()
+  }
+}
+
 onMounted(async () => {
-  const [stylesList, tagsList] = await Promise.all([
-    fetchStyles(),
-    fetchTags(),
-  ])
+  const [stylesList, tagsList] = await Promise.all([fetchStyles(), fetchTags()])
 
   availableStyles.value = stylesList
   availableTags.value = tagsList
@@ -62,6 +74,37 @@ onMounted(async () => {
         Estado
         <input v-model="state" type="text" maxlength="2" placeholder="SP" />
       </label>
+
+      <button
+        class="catalog-filters__locate"
+        type="button"
+        :disabled="isLocating"
+        :aria-label="isLocating ? 'Localizando...' : 'Usar minha localização'"
+        :title="isLocating ? 'Localizando...' : 'Usar minha localização'"
+        @click="locateAndSearch"
+      >
+        <svg
+          v-if="!isLocating"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 21s-6-5.7-6-11a6 6 0 1 1 12 0c0 5.3-6 11-6 11z" />
+          <circle cx="12" cy="10" r="2.5" />
+        </svg>
+        <span v-else aria-hidden="true">…</span>
+      </button>
+
+      <p v-if="locationError" class="error-message">
+        {{ locationError }}
+      </p>
 
       <div class="catalog-filters__break" aria-hidden="true"></div>
 
