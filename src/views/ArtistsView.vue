@@ -2,14 +2,12 @@
 import { ref, onMounted } from 'vue'
 import AuthenticatedLayout from '@/layouts/AuthenticatedLayout.vue'
 import ArtistCard from '@/components/artists/ArtistCard.vue'
-import { fetchArtists, type Artist } from '@/api/artists'
 import { fetchStyles, type Style } from '@/api/styles'
 import { fetchTags, type Tag } from '@/api/tags'
 import MultiSelectFilter from '@/components/filters/MultiSelectFilter.vue'
+import { useArtists } from '@/composables/useArtists'
 
-const artists = ref<Artist[]>([])
-const isLoading = ref(true)
-const errorMessage = ref('')
+const { artists, isLoading, errorMessage, loadArtists } = useArtists()
 const searchQuery = ref('')
 const city = ref('')
 const state = ref('')
@@ -20,31 +18,20 @@ const availableStyles = ref<Style[]>([])
 const tags = ref<number[]>([])
 const availableTags = ref<Tag[]>([])
 
-
-async function loadArtists() {
-  isLoading.value = true
-  errorMessage.value = ''
-
-  try {
-    const response = await fetchArtists({
-      q: searchQuery.value || undefined,
-      city: city.value || undefined,
-      state: state.value || undefined,
-      styles: styles.value.length ? styles.value : undefined,
-      tags: tags.value.length ? tags.value : undefined,
-    })
-    artists.value = response.data
-  } catch {
-    errorMessage.value = 'Não foi possível carregar o catálogo de artistas.'
-  } finally {
-    isLoading.value = false
-  }
+function searchArtists() {
+  return loadArtists({
+    q: searchQuery.value || undefined,
+    city: city.value || undefined,
+    state: state.value || undefined,
+    styles: styles.value.length ? styles.value : undefined,
+    tags: tags.value.length ? tags.value : undefined,
+  })
 }
 
 onMounted(async () => {
   availableStyles.value = await fetchStyles()
   availableTags.value = await fetchTags()
-  loadArtists()
+  await searchArtists()
 })
 </script>
 
@@ -54,7 +41,7 @@ onMounted(async () => {
     title="Artistas"
     description="Consulte os artistas cadastrados e prepare filtros por estilo, cidade e localização."
   >
-    <form class="catalog-filters" @submit.prevent="loadArtists">
+    <form class="catalog-filters" @submit.prevent="searchArtists">
       <label class="catalog-filters__field catalog-filters__field--grow">
         Busca
         <input v-model="searchQuery" type="search" placeholder="Nome, estúdio..." />

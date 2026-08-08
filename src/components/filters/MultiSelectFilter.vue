@@ -54,7 +54,11 @@ function toggleSelection(id: number) {
 
     <div v-if="isOpen" class="catalog-filters__dropdown-panel">
       <label v-for="option in options" :key="option.id" class="catalog-filters__dropdown-option">
-        <input type="checkbox" :checked="modelValue.includes(option.id)" @change="toggleSelection(option.id)" />
+        <input
+          type="checkbox"
+          :checked="modelValue.includes(option.id)"
+          @change="toggleSelection(option.id)"
+        />
         {{ option.name }}
       </label>
     </div>
