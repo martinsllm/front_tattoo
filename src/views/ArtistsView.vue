@@ -5,6 +5,7 @@ import ArtistCard from '@/components/artists/ArtistCard.vue'
 import { fetchArtists, type Artist } from '@/api/artists'
 import { fetchStyles, type Style } from '@/api/styles'
 import { fetchTags, type Tag } from '@/api/tags'
+import MultiSelectFilter from '@/components/filters/MultiSelectFilter.vue'
 
 const artists = ref<Artist[]>([])
 const isLoading = ref(true)
@@ -13,27 +14,12 @@ const searchQuery = ref('')
 const city = ref('')
 const state = ref('')
 
-type FilterPanel = 'styles' | 'tags'
-const openFilterPanel = ref<FilterPanel | null>(null)
-
-function toggleFiltersPanel(panel: 'styles' | 'tags') {
-  openFilterPanel.value = openFilterPanel.value === panel ? null : panel
-}
-
 const styles = ref<number[]>([])
 const availableStyles = ref<Style[]>([])
 
 const tags = ref<number[]>([])
 const availableTags = ref<Tag[]>([])
 
-function toggleSelection(list: number[], id: number) {
-  const index = list.indexOf(id)
-  if (index >= 0) {
-    list.splice(index, 1)
-  } else {
-    list.push(id)
-  }
-}
 
 async function loadArtists() {
   isLoading.value = true
@@ -86,64 +72,19 @@ onMounted(async () => {
 
       <div class="catalog-filters__break" aria-hidden="true"></div>
 
-      <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
-        Estilos
+      <MultiSelectFilter
+        label="Estilos"
+        placeholder="Selecionar estilos"
+        :options="availableStyles"
+        v-model="styles"
+      />
 
-        <div class="catalog-filters__dropdown-trigger" @click="toggleFiltersPanel('styles')">
-          {{
-            styles.length
-              ? availableStyles
-                  .filter((style) => styles.includes(style.id))
-                  .map((style) => style.name)
-                  .join(', ')
-              : 'Selecionar estilos'
-          }}
-        </div>
-
-        <div v-if="openFilterPanel === 'styles'" class="catalog-filters__dropdown-panel">
-          <label
-            v-for="style in availableStyles"
-            :key="style.id"
-            class="catalog-filters__dropdown-option"
-          >
-            <input
-              type="checkbox"
-              :checked="styles.includes(style.id)"
-              @change="toggleSelection(styles, style.id)"
-            />
-            {{ style.name }}
-          </label>
-        </div>
-      </div>
-
-      <div class="catalog-filters__field catalog-filters__dropdown catalog-filters__field--grow">
-        Tags
-        <div class="catalog-filters__dropdown-trigger" @click="toggleFiltersPanel('tags')">
-          {{
-            tags.length
-              ? availableTags
-                  .filter((tag) => tags.includes(tag.id))
-                  .map((tag) => tag.name)
-                  .join(', ')
-              : 'Selecionar tags'
-          }}
-        </div>
-
-        <div v-if="openFilterPanel === 'tags'" class="catalog-filters__dropdown-panel">
-          <label
-            v-for="tag in availableTags"
-            :key="tag.id"
-            class="catalog-filters__dropdown-option"
-          >
-            <input
-              type="checkbox"
-              :checked="tags.includes(tag.id)"
-              @change="toggleSelection(tags, tag.id)"
-            />
-            {{ tag.name }}
-          </label>
-        </div>
-      </div>
+      <MultiSelectFilter
+        label="Tags"
+        placeholder="Selecionar tags"
+        :options="availableTags"
+        v-model="tags"
+      />
 
       <button class="catalog-filters__submit" type="submit">Filtrar</button>
     </form>
