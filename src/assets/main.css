@@ -393,7 +393,12 @@ button:disabled {
 
 @media (max-width: 640px) {
   .dashboard-header {
-    align-items: stretch;
     flex-direction: column;
+    align-items: center;
+    justify-content: center; /* ou flex-start */
+  }
+
+  .authenticated-nav {
+    justify-content: center;
   }
 }
